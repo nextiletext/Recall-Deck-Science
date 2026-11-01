@@ -1,0 +1,1400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Recall Deck - OCR GCSE 21st Century Science B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --surface: #121820;
+      --surface-card: #18222d;
+      --surface-hover: #1f2c3a;
+      --ink: #f0f4f8;
+      --muted: #8a99a8;
+      --line: #263545;
+      --accent-bio: #10b981;
+      --accent-chem: #3b82f6;
+      --accent-phys: #f59e0b;
+      --accent: #10b981;
+      --accent-ink: #022c22;
+      --good: #10b981;
+      --bad: #ef4444;
+      --warn: #f59e0b;
+      --display: 'Bricolage Grotesque', system-ui, sans-serif;
+      --body: 'IBM Plex Sans', system-ui, sans-serif;
+      --mono: 'IBM Plex Mono', monospace;
+    }
+
+    [data-theme="light"] {
+      --bg: #eef2f6;
+      --surface: #ffffff;
+      --surface-card: #f8fafc;
+      --surface-hover: #e2e8f0;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #cbd5e1;
+      --accent-bio: #059669;
+      --accent-chem: #2563eb;
+      --accent-phys: #d97706;
+      --accent: #059669;
+      --accent-ink: #ffffff;
+      --good: #059669;
+      --bad: #dc2626;
+      --warn: #d97706;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 15px;
+      line-height: 1.6;
+      padding-block: 20px 48px;
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      background: var(--surface);
+      padding: 18px 24px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.8rem;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--ink) 30%, var(--muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .controls-top {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .subject-picker {
+      display: flex;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      gap: 4px;
+    }
+
+    .subj-btn {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .subj-btn[data-subj="bio"].active { background: var(--accent-bio); color: #fff; }
+    .subj-btn[data-subj="chem"].active { background: var(--accent-chem); color: #fff; }
+    .subj-btn[data-subj="phys"].active { background: var(--accent-phys); color: #fff; }
+
+    .theme-toggle {
+      background: var(--surface-card);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 8px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--muted);
+      font: 600 0.95rem var(--body);
+      padding: 8px 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+      border-radius: 6px 6px 0 0;
+    }
+
+    nav button[aria-selected="true"] {
+      color: var(--ink);
+      border-bottom-color: var(--accent);
+      background: var(--surface);
+    }
+
+    .unit-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .unit-selector label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    select {
+      font: 500 0.85rem var(--mono);
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    select:focus { border-color: var(--accent); }
+
+    /* FLASHCARD VIEW */
+    .card-container {
+      perspective: 1000px;
+      min-height: 320px;
+    }
+
+    .card {
+      background: var(--surface-card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 32px 28px;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      transition: transform 0.15s ease, border-color 0.2s;
+      position: relative;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-auto: 0;
+    }
+
+    .card-q {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.45rem;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+
+    .card-a {
+      border-top: 1px dashed var(--line);
+      padding-top: 16px;
+      font-size: 1.05rem;
+      color: var(--ink);
+      line-height: 1.6;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .card-hint {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      font: 600 0.95rem var(--body);
+      padding: 14px 20px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover { background: var(--surface-hover); }
+    .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+    .btn.miss { color: var(--bad); border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.05); }
+    .btn.miss:hover { background: rgba(239,68,68,0.15); }
+    .btn.hit { color: var(--good); border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); }
+    .btn.hit:hover { background: rgba(16,185,129,0.15); }
+
+    /* REVISION NOTES VIEW */
+    .notes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .unit-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .unit-title {
+      font-family: var(--display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent);
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .unit-spec-tag {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .note-block {
+      background: var(--surface-card);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .note-block h4 {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .note-block p {
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+
+    .note-block ul {
+      padding-left: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .note-block li {
+      font-size: 0.93rem;
+      color: var(--ink);
+    }
+
+    .key-term {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+    }
+
+    .formula-box {
+      background: var(--bg);
+      border: 1px dashed var(--accent);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 6px 0;
+    }
+
+    /* QUIZ VIEW */
+    .quiz-container {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+    }
+
+    .quiz-q {
+      font-family: var(--display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .opts {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      text-align: left;
+      width: 100%;
+      font: 500 0.95rem var(--body);
+      color: var(--ink);
+      background: var(--surface-card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .opt:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: var(--surface-hover);
+    }
+
+    .opt.right {
+      border-color: var(--good);
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--good);
+    }
+
+    .opt.wrong {
+      border-color: var(--bad);
+      background: rgba(239, 68, 68, 0.12);
+      color: var(--bad);
+    }
+
+    .opt-idx {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 2px 6px;
+      flex-shrink: 0;
+    }
+
+    .explanation {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .explanation b { color: var(--accent); }
+
+    .score-summary {
+      text-align: center;
+      padding: 30px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .score-circle {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 3.5rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .nav-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+      .actions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <h1>Recall Deck</h1>
+        <span class="subtitle">OCR GCSE 21st Century Science B</span>
+      </div>
+      <div class="controls-top">
+        <div class="subject-picker" id="subject-picker">
+          <button class="subj-btn active" data-subj="bio" onclick="switchSubject('bio')">Biology</button>
+          <button class="subj-btn" data-subj="chem" onclick="switchSubject('chem')">Chemistry</button>
+          <button class="subj-btn" data-subj="phys" onclick="switchSubject('phys')">Physics</button>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">Dark Mode</button>
+      </div>
+    </header>
+
+    <div class="nav-bar">
+      <nav role="tablist" id="tabs">
+        <button id="tab-notes" aria-selected="true" onclick="switchTab('notes')">Detailed Notes</button>
+        <button id="tab-study" aria-selected="false" onclick="switchTab('study')">Flashcards</button>
+        <button id="tab-quiz" aria-selected="false" onclick="switchTab('quiz')">Practice Quiz</button>
+      </nav>
+
+      <div class="unit-selector">
+        <label for="unit-select">Unit:</label>
+        <select id="unit-select" onchange="switchUnit(this.value)"></select>
+      </div>
+    </div>
+
+    <main id="view"></main>
+  </div>
+
+  <script>
+    (function () {
+      var currentSubj = 'bio';
+      var currentUnit = 'all';
+      var currentTab = 'notes';
+      var flipped = false;
+      var flashIdx = 0;
+      var quizIdx = 0;
+      var quizSelected = null;
+      var quizScore = 0;
+      var isDark = true;
+
+      // DETAILED REVISION DATA STRUCTURE tailored for OCR GCSE 21st Century Science B
+      var SPEC_DATA = {
+        bio: {
+          title: "OCR GCSE Biology B (B1-B6)",
+          color: "#10b981",
+          units: [
+            {
+              id: "b1",
+              code: "B1",
+              name: "B1: You and Your Genes",
+              notes: [
+                {
+                  t: "Genome, Chromosomes & DNA Structure",
+                  content: "The entire genetic material of an organism is called its genome. In eukaryotic cells, DNA is enclosed in the nucleus packaged as chromosomes. Humans have 46 chromosomes (23 pairs) in diploid somatic cells and 23 single chromosomes in haploid gametes (sperm and egg cells).",
+                  bullets: [
+                    "DNA is a polymer made of two strands twisted into a double helix.",
+                    "Each monomer is a nucleotide consisting of a phosphate group, a deoxyribose sugar molecule, and a nitrogenous base.",
+                    "Complementary base pairing holds strands together: Adenine (A) pairs with Thymine (T) using two hydrogen bonds; Cytosine (C) pairs with Guanine (G) using three hydrogen bonds.",
+                    "A gene is a section of DNA on a chromosome that codes for a specific sequence of amino acids to synthesize a particular protein."
+                  ]
+                },
+                {
+                  t: "Protein Synthesis (Transcription & Translation)",
+                  content: "Proteins are formed from chains of amino acids. The order of bases in a gene determines the order of amino acids in a polypeptide chain.",
+                  bullets: [
+                    "Triplet Code: Every sequence of 3 bases (codon) codes for one specific amino acid.",
+                    "Transcription: In the nucleus, the DNA strand unzips. RNA polymerase uses one strand as a template to synthesize a complementary single-stranded Messenger RNA (mRNA) molecule. (In RNA, Uracil 'U' replaces Thymine 'T').",
+                    "Translation: mRNA leaves the nucleus via nuclear pores and binds to a ribosome in the cytoplasm. Transfer RNA (tRNA) molecules with complementary anticodons deliver specific amino acids to the ribosome. Amino acids are joined by peptide bonds to form a polypeptide chain which folds into a functional protein."
+                  ]
+                },
+                {
+                  t: "Inheritance, Alleles & Monohybrid Crosses",
+                  content: "Alleles are different variants of the same gene. An individual inherits two alleles for each gene (one from each parent).",
+                  bullets: [
+                    "Homozygous: Having two identical alleles (e.g. BB or bb). Heterozygous: Having two different alleles (e.g. Bb).",
+                    "Genotype: The combination of alleles an organism possesses. Phenotype: The physical characteristics expressed as a result of the genotype and environment.",
+                    "Dominant alleles are expressed even if only one copy is present (represented by capital letters). Recessive alleles are only expressed if two copies are present (represented by lower case letters).",
+                    "Codominance occurs when both alleles are equally expressed in the phenotype (e.g. ABO Blood Group AB).",
+                    "Sex Determination: Females have XX chromosomes; Males have XY chromosomes. There is a 50% probability of offspring being male or female."
+                  ]
+                },
+                {
+                  t: "Stem Cells & Differentiation",
+                  content: "Stem cells are undifferentiated cells capable of dividing by mitosis to reproduce themselves or differentiate into specialized cells.",
+                  bullets: [
+                    "Embryonic Stem Cells: Totipotent/Pluripotent; can differentiate into any cell type in the body.",
+                    "Adult Stem Cells: Found in bone marrow; multipotent (can only form limited cell types like blood cells).",
+                    "Meristem Tissue: Found in growing tips of plant roots and shoots; can differentiate into any plant tissue throughout the plant's entire life."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "What is a gene?", a: "A section of DNA on a chromosome that codes for a specific sequence of amino acids to synthesize a specific protein." },
+                { q: "State the complementary base pairing rules for DNA.", a: "Adenine (A) pairs with Thymine (T); Cytosine (C) pairs with Guanine (G)." },
+                { q: "What happens during transcription?", a: "RNA polymerase reads the DNA template strand in the nucleus to produce a complementary single-stranded mRNA molecule." },
+                { q: "Define homozygous and heterozygous.", a: "Homozygous means possessing two identical alleles for a gene; Heterozygous means possessing two different alleles." },
+                { q: "Why are human gametes described as haploid?", a: "Because they contain 23 single chromosomes (half the diploid number of 46)." }
+              ],
+              quiz: [
+                { q: "Which nitrogenous base is present in RNA instead of Thymine?", opts: ["Adenine", "Cytosine", "Uracil", "Guanine"], ans: 2, exp: "RNA replaces Thymine (T) with Uracil (U), which pairs with Adenine (A)." },
+                { q: "If two heterozygous parents (Bb) have a child, what is the probability of the child having the recessive phenotype?", opts: ["0%", "25%", "50%", "75%"], ans: 1, exp: "A Bb x Bb monohybrid cross yields BB, Bb, Bb, bb. 1 in 4 (25%) has the recessive genotype (bb)." }
+              ]
+            },
+            {
+              id: "b2",
+              code: "B2",
+              name: "B2: Keeping Healthy",
+              notes: [
+                {
+                  t: "Pathogens & Disease Transmission",
+                  content: "Communicable diseases are caused by pathogens—microorganisms including bacteria, viruses, fungi, and protists that infect host organisms.",
+                  bullets: [
+                    "Bacteria: Microscopic single-celled organisms that produce toxins that damage tissues (e.g. Salmonella, Gonorrhoea).",
+                    "Viruses: Non-living particles that invade host cells, replicate inside them, and cause the host cells to burst (e.g. HIV, Measles, TMV).",
+                    "Fungi: Hyphae penetrate host skin or plant surfaces (e.g. Rose Black Spot, Athlete's foot).",
+                    "Protists: Microscopic single-celled organisms often carried by vectors (e.g. Plasmodium causing Malaria, carried by Female Anopheles mosquitoes)."
+                  ]
+                },
+                {
+                  t: "Human Defense Systems",
+                  content: "The human body has non-specific defenses to prevent pathogen entry, and a specific immune response if pathogens enter.",
+                  bullets: [
+                    "Non-specific defenses: Skin acts as a physical barrier and secretes antimicrobial sebum; Nose hair and mucus trap particles; Ciliated epithelial cells sweep mucus out of trachea; Stomach acid (HCl) kills ingested microbes.",
+                    "Phagocytosis: Phagocytes engulf and digest pathogens using digestive enzymes.",
+                    "Antibody Production: B-lymphocytes recognize specific antigens on pathogens and produce complementary antibodies that bind to, neutralize, and clump pathogens together.",
+                    "Antitoxin Production: Lymphocytes produce antitoxins that counteract toxins released by bacteria."
+                  ]
+                },
+                {
+                  t: "Vaccination & Herd Immunity",
+                  content: "Vaccination introduces dead, inactive, or weakened forms of a pathogen into the body to stimulate primary immune response without causing illness.",
+                  bullets: [
+                    "White blood cells produce specific antibodies and form memory cells.",
+                    "Upon re-exposure to the live pathogen, memory cells recognize the antigen immediately and produce large quantities of antibodies rapidly (secondary immune response), destroying the pathogen before symptoms occur.",
+                    "Herd Immunity: When a large proportion of the population is vaccinated, the spread of the pathogen is drastically reduced, protecting unvaccinated individuals."
+                  ]
+                },
+                {
+                  t: "Antibiotics, Resistance & Drug Testing",
+                  content: "Antibiotics are drugs that kill bacteria by disrupting bacterial cell wall synthesis or metabolism. They DO NOT kill viruses.",
+                  bullets: [
+                    "Antibiotic Resistance: Random mutations in bacterial DNA can produce resistant strains (e.g. MRSA). Overuse or incomplete courses of antibiotics select for resistant bacteria, which survive and replicate rapidly.",
+                    "Preclinical Testing: Tested on isolated human cells, tissues, and live animals for toxicity and efficacy.",
+                    "Clinical Trials: Phase 1 tests low doses on healthy human volunteers for safety; Phase 2 & 3 test on patients with the disease to determine dosage, efficacy, and side effects using double-blind trials with placebos."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "How do viruses cause tissue damage?", a: "Viruses enter host cells, replicate inside them using cell machinery, and cause the cell to burst." },
+                { q: "What is the function of memory B-cells?", a: "They persist in the blood and rapidly produce antibodies if the same pathogen infects the body again." },
+                { q: "Why do antibiotics not work against viral infections?", a: "Viruses reproduce inside host cells and lack bacterial cell structures like cell walls that antibiotics target." },
+                { q: "What is a double-blind trial?", a: "A clinical trial where neither the patients nor the doctors know who receives the real drug and who receives the placebo." }
+              ],
+              quiz: [
+                { q: "Which vector transmits the protist Plasmodium causing Malaria?", opts: ["Housefly", "Female Anopheles mosquito", "Tsetse fly", "Flea"], ans: 1, exp: "Malaria is transmitted by female Anopheles mosquitoes when they feed on blood." }
+              ]
+            },
+            {
+              id: "b3",
+              code: "B3",
+              name: "B3: Living Together - Food & Ecosystems",
+              notes: [
+                {
+                  t: "Ecosystems, Abiotic & Biotic Factors",
+                  content: "An ecosystem is the interaction of a community of living organisms (biotic) with the non-living (abiotic) parts of their environment.",
+                  bullets: [
+                    "Abiotic factors: Light intensity, temperature, moisture levels, soil pH and mineral content, wind intensity, carbon dioxide levels, oxygen levels.",
+                    "Biotic factors: Availability of food, new predators, new pathogens, outcompeting species.",
+                    "Interdependence: All species in an ecosystem depend on each other for food, shelter, pollination, and seed dispersal. If one species is removed, it affects the whole community."
+                  ]
+                },
+                {
+                  t: "Pyramids of Biomass & Energy Transfer",
+                  content: "Biomass is the dry mass of biological material in living organisms at a given trophic level.",
+                  bullets: [
+                    "Trophic Level 1: Producers (green plants/algae); Level 2: Primary consumers (herbivores); Level 3: Secondary consumers (carnivores).",
+                    "Only about 10% of biomass is transferred from one trophic level to the next.",
+                    "Biomass is lost because: Not all ingested material is absorbed (egested as faeces); Some absorbed biomass is broken down in respiration to yield energy, producing CO2 and water; Waste is excreted as urea."
+                  ]
+                },
+                {
+                  t: "Nutrient Cycles (Carbon & Nitrogen)",
+                  content: "Elements are recycled through ecosystems to provide building blocks for future organisms.",
+                  bullets: [
+                    "Carbon Cycle: CO2 is removed from atmosphere by photosynthesis. Returning mechanisms: Respiration by plants, animals, and decomposers (fungi/bacteria); Combustion of fossil fuels.",
+                    "Nitrogen Cycle: Nitrogen gas (N2) in air is inert. Nitrogen-fixing bacteria (in root nodules of legumes or soil) turn N2 into nitrates. Nitrifying bacteria turn ammonium into nitrates. Plants absorb nitrates to make proteins. Denitrifying bacteria convert nitrates back to N2 gas under anaerobic conditions."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "Why is biomass lost at each trophic level?", a: "Not all material is digested (faeces), energy is lost in respiration, and lost as excretion (urea)." },
+                { q: "What role do nitrifying bacteria play in the nitrogen cycle?", a: "They convert ammonium ions into nitrites and then into nitrates that plants can absorb." }
+              ],
+              quiz: [
+                { q: "What percentage of light energy hitting green plants is typically converted into chemical energy via photosynthesis?", opts: ["1%", "10%", "50%", "90%"], ans: 0, exp: "Producers convert roughly 1% of incident light energy into chemical biomass via photosynthesis." }
+              ]
+            },
+            {
+              id: "b4",
+              code: "B4",
+              name: "B4: Using Food & Controlling Growth",
+              notes: [
+                {
+                  t: "Photosynthesis & Limiting Factors",
+                  content: "Photosynthesis is an endothermic reaction in which light energy is transferred to chloroplasts to synthesize glucose.",
+                  bullets: [
+                    "Equation: 6CO2 + 6H2O → C6H12O6 + 6O2",
+                    "Uses of Glucose: Respiration, stored as insoluble starch, converted to cellulose for cell walls, converted to lipids for storage in seeds, combined with nitrates to form amino acids.",
+                    "Limiting Factors: Light intensity, Carbon Dioxide concentration, Temperature. inverse square law applies to light intensity: Light Intensity ∝ 1 / (distance)²."
+                  ]
+                },
+                {
+                  t: "Respiration & Exercise",
+                  content: "Respiration is an exothermic reaction continuously occurring in living cells to supply energy for cellular processes.",
+                  bullets: [
+                    "Aerobic Respiration (with O2): C6H12O6 + 6O2 → 6CO2 + 6H2O (+ 32 ATP). Occurs in mitochondria.",
+                    "Anaerobic Respiration in muscles (without O2): Glucose → Lactic acid (+ 2 ATP). Yields far less energy.",
+                    "Oxygen Debt: The amount of extra oxygen required after exercise to react with accumulated lactic acid in the liver to break it down into CO2 and water."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "State the word and chemical equations for photosynthesis.", a: "Carbon Dioxide + Water → Glucose + Oxygen | 6CO2 + 6H2O → C6H12O6 + 6O2" },
+                { q: "What is oxygen debt?", a: "The volume of extra oxygen needed after exercise to oxidize accumulated lactic acid in the liver." }
+              ],
+              quiz: [
+                { q: "If the distance between a lamp and a plant is doubled, what happens to the light intensity?", opts: ["Halved", "Doubled", "Quartered", "Multiplied by 4"], ans: 2, exp: "According to the Inverse Square Law, doubling distance reduces light intensity to (1/2)² = 1/4." }
+              ]
+            },
+            {
+              id: "b5",
+              code: "B5",
+              name: "B5: Staying in Balance",
+              notes: [
+                {
+                  t: "Homeostasis & Negative Feedback",
+                  content: "Homeostasis is the regulation of internal conditions of a cell or organism to maintain optimum conditions for function in response to internal and external changes.",
+                  bullets: [
+                    "Negative Feedback Loop: Detects deviation from normal set point -> Receptor sends signal -> Coordination centre processes -> Effector produces response to counteract change."
+                  ]
+                },
+                {
+                  t: "Control of Blood Glucose (Insulin & Glucagon)",
+                  content: "The pancreas controls blood glucose levels using two antagonist hormones.",
+                  bullets: [
+                    "High Blood Glucose: Pancreas releases Insulin. Insulin causes liver and muscle cells to take up glucose and convert it into stored Glycogen.",
+                    "Low Blood Glucose: Pancreas releases Glucagon. Glucagon causes liver to convert stored Glycogen back into Glucose and release it into the bloodstream.",
+                    "Type 1 Diabetes: Autoimmune destruction of pancreatic beta cells; pancreas produces insufficient insulin. Treated with insulin injections.",
+                    "Type 2 Diabetes: Body cells no longer respond to insulin. Controlled with carbohydrate-restricted diet and exercise."
+                  ]
+                },
+                {
+                  t: "Thermoregulation & Kidney Function",
+                  content: "Body temperature is monitored by the thermoregulatory centre in the hypothalamus.",
+                  bullets: [
+                    "Too Hot: Vasodilation (arterioles dilate bringing blood near skin surface); Sweating (evaporative cooling).",
+                    "Too Cold: Vasoconstriction (arterioles constrict reducing blood flow to capillaries); Shivering (skeletal muscle contraction increases metabolic respiration rate).",
+                    "Kidney Function: Nephrons filter blood under pressure (ultrafiltration), selectively reabsorb useful substances (all glucose, required water and ions), and excrete excess water, urea, and salts as urine.",
+                    "ADH (Anti-Diuretic Hormone): Released by pituitary gland when blood is too concentrated. Increases permeability of kidney collecting ducts so more water is reabsorbed back into blood."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "What happens when blood glucose concentration is too high?", a: "The pancreas secretes insulin, causing liver and muscle cells to absorb glucose and store it as glycogen." },
+                { q: "How does ADH affect kidney collecting ducts?", a: "It increases their permeability to water, causing more water to be reabsorbed into the bloodstream." }
+              ],
+              quiz: [
+                { q: "Which hormone is released by the pancreas when blood glucose levels fall too low?", opts: ["Insulin", "Glucagon", "ADH", "Adrenaline"], ans: 1, exp: "Glucagon is released when blood glucose drops, stimulating glycogen breakdown into glucose." }
+              ]
+            },
+            {
+              id: "b6",
+              code: "B6",
+              name: "B6: Life on Earth - Past, Present & Future",
+              notes: [
+                {
+                  t: "Evolution by Natural Selection",
+                  content: "Individual organisms within a species show phenotypic variation caused by differences in their genes.",
+                  bullets: [
+                    "Organisms produce more offspring than can survive, leading to competition for resources.",
+                    "Individuals with characteristics best adapted to their environment have a higher chance of surviving and reproducing ('survival of the fittest').",
+                    "These individuals pass on their advantageous alleles to their offspring.",
+                    "Over generations, the frequency of the advantageous allele increases in the population."
+                  ]
+                },
+                {
+                  t: "Selective Breeding & Genetic Engineering",
+                  content: "Human intervention to modify genome characteristics.",
+                  bullets: [
+                    "Selective Breeding: Humans breed plants or animals with desired characteristics over multiple generations (Risk: Inbreeding reduces gene pool and increases risk of genetic diseases).",
+                    "Genetic Engineering Steps: 1. Identify desired gene; 2. Cut gene out of DNA using restriction enzymes, leaving sticky ends; 3. Cut vector (plasmid or virus) DNA with same restriction enzyme; 4. Join gene and vector DNA using DNA ligase enzyme to create recombinant DNA; 5. Transfer vector into host cell at early stage of development."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "Outline the key steps of genetic engineering.", a: "Isolate desired gene with restriction enzyme -> Cut plasmid vector with same enzyme -> Join with DNA ligase -> Insert vector into target cell." }
+              ],
+              quiz: [
+                { q: "Which enzyme is used to join the sticky ends of DNA fragments in genetic engineering?", opts: ["RNA Polymerase", "Restriction Enzyme", "DNA Ligase", "Amylase"], ans: 2, exp: "DNA Ligase seals the phosphate-sugar backbone, joining the gene to the vector plasmid." }
+              ]
+            }
+          ]
+        },
+        chem: {
+          title: "OCR GCSE Chemistry B (C1-C6)",
+          color: "#3b82f6",
+          units: [
+            {
+              id: "c1",
+              code: "C1",
+              name: "C1: Air & Atmosphere",
+              notes: [
+                {
+                  t: "Atmospheric Composition & Evolution",
+                  content: "Earth's atmosphere has evolved over 4.6 billion years due to volcanic activity and biological processes.",
+                  bullets: [
+                    "Current Composition: 78% Nitrogen (N2), 21% Oxygen (O2), 0.9% Argon (Ar), 0.04% Carbon Dioxide (CO2), trace water vapour.",
+                    "Phase 1: Intense volcanic activity released large amounts of CO2, water vapour, N2, methane, and ammonia. Virtually no O2 (similar to Mars today).",
+                    "Phase 2: Oceans formed as water vapour condensed. CO2 dissolved in oceans forming carbonate precipitates and marine sediments.",
+                    "Phase 3: Algae and green plants evolved ~2.7 billion years ago, undergoing photosynthesis (6CO2 + 6H2O → C6H12O6 + 6O2), taking in CO2 and releasing O2."
+                  ]
+                },
+                {
+                  t: "Atmospheric Pollutants & Global Warming",
+                  content: "Combustion of fossil fuels releases harmful pollutants and greenhouse gases.",
+                  bullets: [
+                    "Carbon Monoxide (CO): Toxic, odourless, colourless gas from incomplete combustion; binds irreversibly to haemoglobin.",
+                    "Sulfur Dioxide (SO2): Formed from sulfur impurities in fuel reacting with O2. Causes acid rain (damages buildings, trees, aquatic life).",
+                    "Nitrogen Oxides (NOx): Formed inside high-temperature engines. Causes respiratory problems and acid rain.",
+                    "Particulates (Soot/C): Incomplete combustion. Causes global dimming and respiratory damage.",
+                    "Greenhouse Effect: Short-wavelength UV/visible radiation from sun passes through atmosphere and warms Earth. Earth re-radiates long-wavelength infrared (IR) radiation. Greenhouse gases (CO2, CH4, H2O) absorb outgoing IR radiation and re-emit it in all directions, trapping thermal energy."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "What were the main gases in Earth's early atmosphere?", a: "Carbon dioxide, water vapour, nitrogen, with little to no oxygen." },
+                { q: "How does sulfur dioxide cause acid rain?", a: "Sulfur impurities in fuel burn to form SO2, which dissolves in rain clouds to produce dilute sulfuric acid." }
+              ],
+              quiz: [
+                { q: "Which type of radiation is absorbed by greenhouse gases in the atmosphere?", opts: ["Short-wavelength Ultraviolet", "Gamma rays", "Long-wavelength Infrared", "X-rays"], ans: 2, exp: "Greenhouse gases absorb long-wavelength infrared thermal radiation emitted by Earth." }
+              ]
+            },
+            {
+              id: "c2",
+              code: "C2",
+              name: "C2: Material Choices",
+              notes: [
+                {
+                  t: "Crude Oil & Fractional Distillation",
+                  content: "Crude oil is a finite complex mixture of hydrocarbons (mostly alkanes).",
+                  bullets: [
+                    "Fractional Distillation Column: Crude oil is heated and vaporized before entering the fractionating column which is hot at the bottom and cool at the top.",
+                    "Vapours rise up the column. Hydrocarbons condense at different heights depending on their boiling points.",
+                    "Long-chain hydrocarbons have high boiling points, high viscosity, low flammability -> condense near the bottom.",
+                    "Short-chain hydrocarbons have low boiling points, low viscosity, high flammability -> condense near top."
+                  ]
+                },
+                {
+                  t: "Polymers, Ceramics & Composites",
+                  content: "Materials possess properties tailored for specific functions.",
+                  bullets: [
+                    "Addition Polymers: Made from alkenes (monomers with C=C double bonds) opening up to form long single-bonded chains.",
+                    "Thermosoftening Polymers: Weak intermolecular forces between polymer chains; melt easily when heated and can be remoulded.",
+                    "Thermosetting Polymers: Strong covalent cross-links between polymer chains; do not melt when heated, char at high temperatures.",
+                    "Composites: Consist of a reinforcement material embedded in a matrix/binder (e.g. Concrete, Carbon Fibre)."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "Why do short-chain hydrocarbons condense near the top of a fractionating column?", a: "Because they have lower boiling points due to weaker intermolecular forces." },
+                { q: "Explain the structural difference between thermosoftening and thermosetting polymers.", a: "Thermosoftening polymers have weak intermolecular forces between chains; Thermosetting polymers have strong covalent cross-links." }
+              ],
+              quiz: [
+                { q: "What type of chemical bond holds together the monomers in an addition polymer chain?", opts: ["Ionic", "Covalent", "Metallic", "Hydrogen"], ans: 1, exp: "Polymer backbones consist of strong covalent bonds between carbon atoms." }
+              ]
+            },
+            {
+              id: "c3",
+              code: "C3",
+              name: "C3: Chemical Reactions",
+              notes: [
+                {
+                  t: "Conservation of Mass & Redox",
+                  content: "Mass is conserved in all chemical reactions. Total mass of reactants equals total mass of products.",
+                  bullets: [
+                    "Redox in terms of electrons: OIL RIG -> Oxidation Is Loss of electrons; Reduction Is Gain of electrons.",
+                    "Oxidizing agent: Accepts electrons (gets reduced). Reducing agent: Donates electrons (gets oxidized)."
+                  ]
+                },
+                {
+                  t: "Acids, Bases, Neutralization & Titrations",
+                  content: "Acids produce H+ ions in aqueous solutions; Alkalis produce OH- ions.",
+                  bullets: [
+                    "Neutralization ionic equation: H+(aq) + OH-(aq) → H2O(l).",
+                    "Strong acids (e.g. HCl, HNO3, H2SO4) completely ionize in water; Weak acids (e.g. CH3COOH) only partially ionize.",
+                    "pH Scale: Each decrease of 1 pH unit represents a 10-fold increase in [H+] ion concentration."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "Define oxidation and reduction in terms of electrons.", a: "Oxidation is the loss of electrons; Reduction is the gain of electrons (OIL RIG)." },
+                { q: "Write the general ionic equation for a neutralization reaction.", a: "H+(aq) + OH-(aq) → H2O(l)" }
+              ],
+              quiz: [
+                { q: "If solution A has a pH of 3 and solution B has a pH of 5, how much higher is the [H+] concentration in solution A?", opts: ["2 times", "10 times", "20 times", "100 times"], ans: 3, exp: "A difference of 2 pH units corresponds to 10^2 = 100 times higher H+ concentration." }
+              ]
+            },
+            {
+              id: "c4",
+              code: "C4",
+              name: "C4: Predicting & Controlling Reactions",
+              notes: [
+                {
+                  t: "Collision Theory & Reaction Rates",
+                  content: "Chemical reactions can only occur when reacting particles collide with sufficient energy (Activation Energy).",
+                  bullets: [
+                    "Factors increasing reaction rate: 1. Increased Temperature (particles move faster, collide more frequently, and more collisions have energy ≥ Ea); 2. Increased Concentration/Pressure (more particles per unit volume, higher collision frequency); 3. Increased Surface Area (more exposed particles for collisions); 4. Catalysts (provide alternative pathway with lower activation energy)."
+                  ]
+                },
+                {
+                  t: "Reversible Reactions & Le Chatelier's Principle",
+                  content: "In a closed system, reversible reactions reach dynamic equilibrium when forward and reverse reaction rates are equal.",
+                  bullets: [
+                    "Le Chatelier's Principle: If a system at equilibrium is subjected to a change in conditions, the system alters to counteract that change.",
+                    "Temperature increase: Shifts equilibrium in endothermic direction to absorb heat.",
+                    "Pressure increase: Shifts equilibrium to the side with fewer gas molecules."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "How does a catalyst increase reaction rate without being used up?", a: "By providing an alternative reaction pathway with a lower activation energy." },
+                { q: "According to Le Chatelier's Principle, what happens when pressure is increased on a gas equilibrium?", a: "Equilibrium shifts towards the side with fewer moles of gas." }
+              ],
+              quiz: [
+                { q: "In the Haber process: N2(g) + 3H2(g) ⇌ 2NH3(g) (exothermic forward), what shift occurs if temperature is increased?", opts: ["Shifts right to yield more NH3", "Shifts left to absorb heat", "No shift occurs", "Reaction stops completely"], ans: 1, exp: "Increasing temperature favors the endothermic reverse reaction, shifting equilibrium left." }
+              ]
+            },
+            {
+              id: "c5",
+              code: "C5",
+              name: "C5: Chemical Analysis",
+              notes: [
+                {
+                  t: "Purity & Chromatography",
+                  content: "A pure substance consists of a single element or compound with a specific melting and boiling point.",
+                  bullets: [
+                    "Paper Chromatography: Separates mixtures based on solubilities. Stationary phase = paper; Mobile phase = solvent.",
+                    "Rf Value Calculation: Rf = (Distance moved by spot) / (Distance moved by solvent front). Rf value is always ≤ 1."
+                  ]
+                },
+                {
+                  t: "Chemical Tests for Gases & Ions",
+                  content: "Qualitative analysis tests for cations and anions.",
+                  bullets: [
+                    "Gas Tests: Oxygen (relights a glowing splint); Hydrogen (squeaky pop with lighted splint); Carbon Dioxide (turns limewater milky/cloudy); Chlorine (bleaches damp litmus paper white).",
+                    "Flame Tests (Cations): Lithium = Crimson; Sodium = Yellow; Potassium = Lilac; Calcium = Orange-Red; Copper = Green.",
+                    "Anion Tests: Halides (add dilute HNO3 then AgNO3): Chloride = White precipitate; Bromide = Cream; Iodide = Yellow. Sulfates (add dilute HCl then BaCl2) = White precipitate of BaSO4."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "How do you calculate the Rf value in paper chromatography?", a: "Rf = Distance moved by spot / Distance moved by solvent front." },
+                { q: "What color flame does Potassium produce in a flame test?", a: "Lilac." }
+              ],
+              quiz: [
+                { q: "Which chemical reagent test confirms the presence of Sulfate (SO4^2-) ions?", opts: ["Silver Nitrate + Nitric Acid", "Barium Chloride + Hydrochloric Acid", "Sodium Hydroxide", "Lime water"], ans: 1, exp: "Barium chloride reacts with sulfate ions to form an insoluble white precipitate of Barium Sulfate." }
+              ]
+            },
+            {
+              id: "c6",
+              code: "C6",
+              name: "C6: Global Challenges",
+              notes: [
+                {
+                  t: "Potable Water & Waste Water Treatment",
+                  content: "Potable water is water that is safe to drink. It is not pure H2O because it contains dissolved minerals.",
+                  bullets: [
+                    "Freshwater Treatment: 1. Pass through wire mesh filters (screening); 2. Sand filtration; 3. Sterilization using Chlorine gas, Ozone, or UV light to kill microbes.",
+                    "Desalination of Sea Water: Reverse osmosis (high energy/pressure) or Thermal Distillation (expensive)."
+                  ]
+                },
+                {
+                  t: "Extracting Metals (Phytomining & Bioleaching)",
+                  content: "Alternative methods for extracting metals from low-grade copper ores.",
+                  bullets: [
+                    "Phytomining: Plants are grown on land containing low-grade copper ore. Plants absorb copper ions into roots and accumulate them in leaves. Plants are harvested and burned. The ash contains high concentrations of copper compounds which are reacted with sulfuric acid to form copper sulfate solution.",
+                    "Bioleaching: Bacteria break down low-grade copper ore, producing an acidic solution called a leachate containing copper ions. Copper is then displaced using scrap iron or extracted via electrolysis."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "Describe the process of phytomining.", a: "Plants absorb copper ions from low-grade soil -> Plants harvested & burned -> Ash dissolved in acid -> Copper extracted via displacement with iron or electrolysis." }
+              ],
+              quiz: [
+                { q: "Why is scrap iron used to displace copper from leachate solutions?", opts: ["Iron is more reactive than copper and cheap", "Iron is less reactive than copper", "Iron acts as a catalyst", "Iron absorbs water"], ans: 0, exp: "Iron is more reactive than copper, displacing it from copper sulfate solution economically." }
+              ]
+            }
+          ]
+        },
+        phys: {
+          title: "OCR GCSE Physics B (P1-P6)",
+          color: "#f59e0b",
+          units: [
+            {
+              id: "p1",
+              code: "P1",
+              name: "P1: Radiation & Waves",
+              notes: [
+                {
+                  t: "Electromagnetic Spectrum & Wave Properties",
+                  content: "Transverse waves oscillate perpendicular to the direction of energy transfer. All EM waves travel at the speed of light (3 x 10^8 m/s) in a vacuum.",
+                  bullets: [
+                    "EM Spectrum in order of INCREASING FREQUENCY / DECREASING WAVELENGTH: Radio waves -> Microwaves -> Infrared -> Visible light -> Ultraviolet -> X-rays -> Gamma rays.",
+                    "Wave Equations: Wave speed (v) = Frequency (f) × Wavelength (λ) [v = f λ]; Time Period (T) = 1 / Frequency (f).",
+                    "Refraction: When a wave enters a denser medium, it slows down and bends TOWARDS the normal line. When entering a less dense medium, it speeds up and bends AWAY from the normal."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "State the EM spectrum in order of increasing frequency.", a: "Radio waves, Microwaves, Infrared, Visible light, Ultraviolet, X-rays, Gamma rays." },
+                { q: "What equation links wave speed, frequency, and wavelength?", a: "v = f × λ (Wave speed = frequency × wavelength)." }
+              ],
+              quiz: [
+                { q: "Which electromagnetic wave has the shortest wavelength and highest frequency?", opts: ["Radio waves", "Visible light", "Ultraviolet", "Gamma rays"], ans: 3, exp: "Gamma rays have the highest frequency, shortest wavelength, and highest photon energy." }
+              ]
+            },
+            {
+              id: "p2",
+              code: "P2",
+              name: "P2: Sustainable Energy",
+              notes: [
+                {
+                  t: "Work Done, Power & Efficiency",
+                  content: "Energy cannot be created or destroyed, only transferred usefully, stored, or dissipated.",
+                  bullets: [
+                    "Work Done (J) = Force (N) × Distance moved in direction of force (m) [W = F d].",
+                    "Power (W) = Energy transferred (J) / Time taken (s) [P = E / t]. 1 Watt = 1 Joule per second.",
+                    "Efficiency = (Useful Energy Output / Total Energy Input) × 100%.",
+                    "National Grid: Uses Step-Up Transformers to increase voltage to ~400kV for transmission (reducing current and heat loss in cables), then Step-Down Transformers to decrease voltage to 230V for safe domestic use."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "Why does the National Grid use step-up transformers?", a: "To increase voltage, which decreases current, thereby reducing thermal energy loss in cables." }
+              ],
+              quiz: [
+                { q: "A motor consumes 500J of electrical energy and outputs 400J of useful kinetic energy. What is its efficiency?", opts: ["20%", "75%", "80%", "90%"], ans: 2, exp: "Efficiency = (400 / 500) * 100 = 80%." }
+              ]
+            },
+            {
+              id: "p3",
+              code: "P3",
+              name: "P3: Electric Circuits",
+              notes: [
+                {
+                  t: "Current, Voltage, Resistance & Mains Electricity",
+                  content: "Charge flow (Q = I t). Potential difference is the work done per unit charge (V = W / Q).",
+                  bullets: [
+                    "Ohm's Law: V = I R (Potential Difference = Current × Resistance).",
+                    "I-V Characteristics: Resistor (straight line through origin = fixed resistance); Filament Lamp (S-curve = resistance increases as temperature increases); Diode (current flows in one direction only).",
+                    "Series vs Parallel: In Series, Current is equal everywhere, Total Voltage is shared; In Parallel, Voltage is equal across branches, Total Current splits.",
+                    "Three-pin plug: Live wire (Brown, 230V); Neutral wire (Blue, 0V); Earth wire (Green/Yellow stripes, safety wire connected to appliance metal casing)."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "What equation links Potential Difference, Current, and Resistance?", a: "V = I × R" },
+                { q: "Identify the colors of the Live, Neutral, and Earth wires in a UK plug.", a: "Live = Brown; Neutral = Blue; Earth = Green/Yellow stripes." }
+              ],
+              quiz: [
+                { q: "If two 10 Ω resistors are connected in parallel, what is their total combined resistance?", opts: ["5 Ω", "10 Ω", "20 Ω", "100 Ω"], ans: 0, exp: "Connecting resistors in parallel reduces total resistance to half: 1/R = 1/10 + 1/10 = 2/10 -> R = 5 Ω." }
+              ]
+            },
+            {
+              id: "p4",
+              code: "P4",
+              name: "P4: Explaining Motion",
+              notes: [
+                {
+                  t: "Kinematics & Newton's Laws",
+                  content: "Study of forces and motion.",
+                  bullets: [
+                    "Distance-Time Graphs: Gradient = Speed.",
+                    "Velocity-Time Graphs: Gradient = Acceleration; Area under graph = Distance travelled.",
+                    "Newton's First Law: Object remains at rest or constant velocity unless acted on by a resultant force.",
+                    "Newton's Second Law: Resultant Force = Mass × Acceleration (F = m a).",
+                    "Momentum: p = m v. Total momentum before a collision equals total momentum after collision (Conservation of Momentum)."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "What does the area under a velocity-time graph represent?", a: "The total distance travelled by the object." }
+              ],
+              quiz: [
+                { q: "What resultant force is required to accelerate a 1200 kg car at 3 m/s²?", opts: ["400 N", "1200 N", "3600 N", "4800 N"], ans: 2, exp: "F = m * a = 1200 kg * 3 m/s² = 3600 N." }
+              ]
+            },
+            {
+              id: "p5",
+              code: "P5",
+              name: "P5: Radioactive Materials",
+              notes: [
+                {
+                  t: "Nuclear Radiation, Half-Life & Fission/Fusion",
+                  content: "Radioactive decay is random as unstable nuclei emit radiation to become stable.",
+                  bullets: [
+                    "Alpha (α): Helium nucleus (2 protons, 2 neutrons); Highly ionizing; Stopped by paper/skin; Low penetration.",
+                    "Beta (β): High-speed electron; Medium ionizing; Stopped by 5mm aluminum.",
+                    "Gamma (γ): High frequency EM wave; Low ionizing; Stopped by thick lead or concrete.",
+                    "Half-Life: The time taken for the number of radioactive nuclei in a sample to halve, or for the count rate to halve.",
+                    "Nuclear Fission: Splitting of a heavy nucleus (e.g. Uranium-235) into smaller daughter nuclei, releasing neutrons and energy.",
+                    "Nuclear Fusion: Joining of two light nuclei (e.g. Hydrogen) to form a heavier nucleus (Helium), releasing huge energy. Requires extreme temperature and pressure."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "Define the half-life of a radioactive isotope.", a: "The time it takes for half of the unstable nuclei in a sample to decay, or for the count rate to drop by 50%." }
+              ],
+              quiz: [
+                { q: "Which type of nuclear radiation is most ionizing but least penetrating?", opts: ["Alpha", "Beta", "Gamma", "Neutron"], ans: 0, exp: "Alpha particles have a +2 charge and large mass, making them highly ionizing but easily absorbed by paper." }
+              ]
+            },
+            {
+              id: "p6",
+              code: "P6",
+              name: "P6: Matter - Explaining Properties",
+              notes: [
+                {
+                  t: "Density, Thermal Energy & Gas Laws",
+                  content: "States of matter and internal thermal energy equations.",
+                  bullets: [
+                    "Density (ρ) = Mass (m) / Volume (V) [ρ = m / V].",
+                    "Specific Heat Capacity (c): Energy required to raise temperature of 1kg of a substance by 1°C. ΔE = m c Δθ.",
+                    "Specific Latent Heat (L): Energy required to change state of 1kg of a substance with NO change in temperature. E = m L.",
+                    "Boyle's Law (Gas Pressure): For a fixed mass of gas at constant temperature, Pressure × Volume = Constant (P1 V1 = P2 V2)."
+                  ]
+                }
+              ],
+              cards: [
+                { q: "What is specific latent heat?", a: "The amount of energy required to change the state of 1kg of a substance without changing its temperature." }
+              ],
+              quiz: [
+                { q: "A gas occupies a volume of 4 m³ at a pressure of 100 kPa. If compressed to 2 m³ at constant temperature, what is the new pressure?", opts: ["50 kPa", "100 kPa", "200 kPa", "400 kPa"], ans: 2, exp: "P1 V1 = P2 V2 -> (100 * 4) = P2 * 2 -> P2 = 200 kPa." }
+              ]
+            }
+          ]
+        }
+      };
+
+      // UI CONTROLLER FUNCTIONS
+      window.toggleTheme = function () {
+        isDark = !isDark;
+        if (isDark) {
+          document.documentElement.removeAttribute('data-theme');
+          document.getElementById('theme-btn').innerText = 'Dark Mode';
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.getElementById('theme-btn').innerText = 'Light Mode';
+        }
+      };
+
+      window.switchSubject = function (subjKey) {
+        currentSubj = subjKey;
+        currentUnit = 'all';
+        flashIdx = 0;
+        quizIdx = 0;
+        quizSelected = null;
+        quizScore = 0;
+        flipped = false;
+
+        document.querySelectorAll('.subj-btn').forEach(function (btn) {
+          btn.classList.toggle('active', btn.getAttribute('data-subj') === subjKey);
+        });
+
+        document.documentElement.style.setProperty('--accent', SPEC_DATA[subjKey].color);
+        updateUnitDropdown();
+        render();
+      };
+
+      window.switchUnit = function (unitVal) {
+        currentUnit = unitVal;
+        flashIdx = 0;
+        quizIdx = 0;
+        quizSelected = null;
+        quizScore = 0;
+        flipped = false;
+        render();
+      };
+
+      window.switchTab = function (tabKey) {
+        currentTab = tabKey;
+        flipped = false;
+        document.querySelectorAll('nav button').forEach(function (btn) {
+          btn.setAttribute('aria-selected', btn.id === 'tab-' + tabKey);
+        });
+        render();
+      };
+
+      function updateUnitDropdown() {
+        var select = document.getElementById('unit-select');
+        var html = '<option value="all">All Units (' + currentSubj.toUpperCase() + ')</option>';
+        SPEC_DATA[currentSubj].units.forEach(function (u) {
+          html += '<option value="' + u.id + '">' + u.name + '</option>';
+        });
+        select.innerHTML = html;
+        select.value = currentUnit;
+      }
+
+      function getFilteredUnits() {
+        var units = SPEC_DATA[currentSubj].units;
+        if (currentUnit === 'all') return units;
+        return units.filter(function (u) { return u.id === currentUnit; });
+      }
+
+      function getFilteredCards() {
+        var list = [];
+        getFilteredUnits().forEach(function (u) {
+          u.cards.forEach(function (c) {
+            list.push({ unitName: u.name, q: c.q, a: c.a });
+          });
+        });
+        return list;
+      }
+
+      function getFilteredQuiz() {
+        var list = [];
+        getFilteredUnits().forEach(function (u) {
+          if (u.quiz) {
+            u.quiz.forEach(function (q) {
+              list.push({ unitName: u.name, q: q.q, opts: q.opts, ans: q.ans, exp: q.exp });
+            });
+          }
+        });
+        return list;
+      }
+
+      // RENDER FUNCTIONS
+      function renderNotes() {
+        var units = getFilteredUnits();
+        var html = '<div class="notes-container">';
+        units.forEach(function (u) {
+          html += '<div class="unit-panel">';
+          html += '<div class="unit-title"><span>' + u.name + '</span><span class="unit-spec-tag">OCR GCSE 21st Century</span></div>';
+          u.notes.forEach(function (n) {
+            html += '<div class="note-block">';
+            html += '<h4>' + n.t + '</h4>';
+            if (n.content) html += '<p>' + n.content + '</p>';
+            if (n.bullets && n.bullets.length) {
+              html += '<ul>';
+              n.bullets.forEach(function (b) {
+                html += '<li>' + b + '</li>';
+              });
+              html += '</ul>';
+            }
+            html += '</div>';
+          });
+          html += '</div>';
+        });
+        html += '</div>';
+        return html;
+      }
+
+      function renderStudy() {
+        var cards = getFilteredCards();
+        if (cards.length === 0) return '<div class="unit-panel">No flashcards available for this filter.</div>';
+
+        var c = cards[flashIdx % cards.length];
+        var html = '<div class="card-container">';
+        html += '<div class="card" onclick="flipCard()">';
+        html += '<div class="card-head"><span>' + c.unitName + '</span><span>Card ' + (flashIdx + 1) + ' of ' + cards.length + '</span></div>';
+        html += '<div class="card-body">';
+        html += '<div class="card-q">' + c.q + '</div>';
+        if (flipped) {
+          html += '<div class="card-a">' + c.a + '</div>';
+        }
+        html += '</div>';
+        html += '<div class="card-hint">' + (flipped ? '✓ Tap card to flip back' : '💡 Tap card to reveal answer') + '</div>';
+        html += '</div>';
+        html += '</div>';
+
+        html += '<div class="actions">';
+        html += '<button class="btn miss" onclick="nextCard(event, false)">❌ Need Practice</button>';
+        html += '<button class="btn hit" onclick="nextCard(event, true)">✅ Got It!</button>';
+        html += '</div>';
+        return html;
+      }
+
+      window.flipCard = function () {
+        flipped = !flipped;
+        render();
+      };
+
+      window.nextCard = function (e, hit) {
+        if (e) e.stopPropagation();
+        flipped = false;
+        flashIdx++;
+        render();
+      };
+
+      function renderQuiz() {
+        var quizList = getFilteredQuiz();
+        if (quizList.length === 0) return '<div class="unit-panel">No quiz questions available for this unit filter.</div>';
+
+        if (quizIdx >= quizList.length) {
+          var html = '<div class="quiz-container"><div class="score-summary">';
+          html += '<h2>Quiz Completed!</h2>';
+          html += '<div class="score-circle">' + quizScore + ' / ' + quizList.length + '</div>';
+          html += '<p>Great job reviewing your OCR Science material!</p>';
+          html += '<button class="btn primary" onclick="resetQuiz()">Restart Quiz</button>';
+          html += '</div></div>';
+          return html;
+        }
+
+        var q = quizList[quizIdx];
+        var html = '<div class="quiz-container">';
+        html += '<div class="quiz-header"><span>' + q.unitName + '</span><span>Question ' + (quizIdx + 1) + ' of ' + quizList.length + '</span></div>';
+        html += '<div class="quiz-q">' + q.q + '</div>';
+        html += '<div class="opts">';
+        q.opts.forEach(function (opt, idx) {
+          var cls = 'opt';
+          if (quizSelected !== null) {
+            if (idx === q.ans) cls += ' right';
+            else if (idx === quizSelected) cls += ' wrong';
+          }
+          html += '<button class="' + cls + '" ' + (quizSelected !== null ? 'disabled' : '') + ' onclick="selectQuizOpt(' + idx + ')">';
+          html += '<span class="opt-idx">' + String.fromCharCode(65 + idx) + '</span>';
+          html += '<span>' + opt + '</span>';
+          html += '</button>';
+        });
+        html += '</div>';
+
+        if (quizSelected !== null) {
+          html += '<div class="explanation"><b>Explanation:</b> ' + q.exp + '</div>';
+          html += '<button class="btn primary" style="margin-top:10px;" onclick="nextQuizQ()">Next Question →</button>';
+        }
+        html += '</div>';
+        return html;
+      }
+
+      window.selectQuizOpt = function (idx) {
+        quizSelected = idx;
+        if (idx === getFilteredQuiz()[quizIdx].ans) quizScore++;
+        render();
+      };
+
+      window.nextQuizQ = function () {
+        quizIdx++;
+        quizSelected = null;
+        render();
+      };
+
+      window.resetQuiz = function () {
+        quizIdx = 0;
+        quizSelected = null;
+        quizScore = 0;
+        render();
+      };
+
+      function render() {
+        var main = document.getElementById('view');
+        if (currentTab === 'notes') main.innerHTML = renderNotes();
+        else if (currentTab === 'study') main.innerHTML = renderStudy();
+        else if (currentTab === 'quiz') main.innerHTML = renderQuiz();
+      }
+
+      // Initial initialization
+      updateUnitDropdown();
+      render();
+    })();
+  </script>
+</body>
+</html>
