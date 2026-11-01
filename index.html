@@ -51,6 +51,11 @@
       border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer;
     }
     .subj-btn.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 500; }
+    .filter-bar { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+    select {
+      font: 400 0.9rem var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line);
+      border-radius: 6px; padding: 8px 12px; max-width: 300px; cursor: pointer;
+    }
     nav { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
     nav button {
       background: none; border: 0; border-bottom: 3px solid transparent; color: var(--muted);
@@ -100,6 +105,7 @@
   <script>
     (function () {
       var currentSubj = 'bio';
+      var currentUnit = 'all';
       var tab = 'study';
       var flipped = false;
       var qIdx = 0;
@@ -112,6 +118,7 @@
           title: "OCR GCSE 21st Century Biology (B1-B6)",
           units: [
             {
+              id: "b1",
               name: "B1: You and Your Genes",
               cards: [
                 { q: "Where is genetic material stored in a eukaryotic cell?", a: "In the nucleus, packaged into chromosomes." },
@@ -127,6 +134,7 @@
               ]
             },
             {
+              id: "b2",
               name: "B2: Keeping Healthy",
               cards: [
                 { q: "What is a pathogen?", a: "A microorganism that causes disease (e.g., bacteria, viruses, fungi, protists)." },
@@ -139,6 +147,63 @@
               quiz: [
                 { q: "What do antibiotics treat?", opts: ["Viral infections", "Bacterial infections", "Fungal infections", "All infections"], ans: 1 }
               ]
+            },
+            {
+              id: "b3",
+              name: "B3: Living Together - Food and Ecosystems",
+              cards: [
+                { q: "What is interdependence?", a: "How different species depend on each other for food, shelter, pollination, and seed dispersal." },
+                { q: "What is biomass?", a: "The total mass of living material in organisms, often measured as dry mass." },
+                { q: "What are biotic and abiotic factors?", a: "Biotic factors are living components (predators, disease); abiotic factors are non-living (temperature, light intensity)." }
+              ],
+              notes: [
+                { t: "Ecosystems", points: ["Energy is lost at each trophic level due to respiration, movement, and waste.", "Only about 10% of energy is passed on to the next trophic level."] }
+              ],
+              quiz: [
+                { q: "Roughly what percentage of energy is transferred from one trophic level to the next?", opts: ["1%", "10%", "50%", "90%"], ans: 1 }
+              ]
+            },
+            {
+              id: "b4",
+              name: "B4: Using Food and Controlling Growth",
+              cards: [
+                { q: "What is the word equation for aerobic respiration?", a: "Glucose + Oxygen → Carbon Dioxide + Water (+ Energy)" },
+                { q: "When does anaerobic respiration happen in humans?", a: "During hard exercise when oxygen supply cannot keep up with demand, producing lactic acid." }
+              ],
+              notes: [
+                { t: "Respiration & Metabolism", points: ["Aerobic respiration releases much more energy than anaerobic respiration.", "Metabolism is the sum of all the chemical reactions in the body."] }
+              ],
+              quiz: [
+                { q: "What is the byproduct of anaerobic respiration in human muscles?", opts: ["Ethanol", "Lactic acid", "Carbon dioxide", "Oxygen"], ans: 1 }
+              ]
+            },
+            {
+              id: "b5",
+              name: "B5: The Human Body - Staying in Balance",
+              cards: [
+                { q: "What is homeostasis?", a: "The maintenance of a constant internal environment (e.g., body temperature, blood glucose levels)." },
+                { q: "What hormone lowers blood glucose levels?", a: "Insulin (produced by the pancreas)." }
+              ],
+              notes: [
+                { t: "Control Systems", points: ["Receptor -> Coordination Centre -> Effector.", "Type 1 diabetes is caused by the pancreas failing to produce enough insulin."] }
+              ],
+              quiz: [
+                { q: "Which organ detects changes in blood glucose and releases insulin?", opts: ["Liver", "Kidney", "Pancreas", "Brain"], ans: 2 }
+              ]
+            },
+            {
+              id: "b6",
+              name: "B6: Life on Earth - Past, Present and Future",
+              cards: [
+                { q: "What is natural selection?", a: "The process where organisms better adapted to their environment tend to survive and produce more offspring." },
+                { q: "What is biodiversity?", a: "The variety of all different species of organisms on Earth, or within an ecosystem." }
+              ],
+              notes: [
+                { t: "Evolution & Biodiversity", points: ["Charles Darwin proposed the theory of evolution by natural selection.", "Deforestation and pollution are major threats to global biodiversity."] }
+              ],
+              quiz: [
+                { q: "Who proposed the theory of evolution by natural selection?", opts: ["Gregor Mendel", "Charles Darwin", "Louis Pasteur", "Watson and Crick"], ans: 1 }
+              ]
             }
           ]
         },
@@ -146,6 +211,7 @@
           title: "OCR GCSE 21st Century Chemistry (C1-C6)",
           units: [
             {
+              id: "c1",
               name: "C1: Air and Atmosphere",
               cards: [
                 { q: "What are the main gases in Earth's current atmosphere?", a: "78% Nitrogen, 21% Oxygen, 0.9% Argon, 0.04% Carbon Dioxide." },
@@ -159,16 +225,73 @@
               ]
             },
             {
-              name: "C2: Chemical Patterns",
+              id: "c2",
+              name: "C2: Material Choices",
               cards: [
-                { q: "How are elements arranged in the modern periodic table?", a: "In order of increasing atomic number (number of protons)." },
-                { q: "What do elements in the same group have in common?", a: "They have the same number of electrons in their outer shell and similar chemical properties." }
+                { q: "What is a polymer?", a: "A large molecule made up of many small repeating units called monomers joined together." },
+                { q: "What is the difference between thermosetting and thermosoftening polymers?", a: "Thermosoftening polymers melt when heated; thermosetting polymers do not melt because they have cross-links." }
               ],
               notes: [
-                { t: "Periodic Trends", points: ["Group 1 (Alkali metals) get more reactive down the group.", "Group 7 (Halogens) get less reactive down the group."] }
+                { t: "Materials & Polymers", points: ["Nanoparticles have a diameter between 1nm and 100nm and have high surface area to volume ratios."] }
               ],
               quiz: [
-                { q: "Elements in the same group share:", opts: ["Same number of electron shells", "Same atomic mass", "Same outer shell electrons", "Same melting point"], ans: 2 }
+                { q: "What are the small molecules that join to make polymers called?", opts: ["Isotopes", "Monomers", "Catalysts", "Fullerenes"], ans: 1 }
+              ]
+            },
+            {
+              id: "c3",
+              name: "C3: Chemical Reactions",
+              cards: [
+                { q: "What is conservation of mass?", a: "Mass is neither created nor destroyed during a chemical reaction; total mass of reactants equals products." },
+                { q: "What is reduction in chemical terms?", a: "The gain of electrons or loss of oxygen by a substance." }
+              ],
+              notes: [
+                { t: "Reactions & Equations", points: ["Acids react with bases to form salts and water.", "Metals react with acids to produce salt and hydrogen gas."] }
+              ],
+              quiz: [
+                { q: "What is produced when an acid reacts with a metal?", opts: ["Salt and water", "Salt and hydrogen", "Water and oxygen", "Carbon dioxide"], ans: 1 }
+              ]
+            },
+            {
+              id: "c4",
+              name: "C4: Predicting and Controlling Reactions",
+              cards: [
+                { q: "What is an exothermic reaction?", a: "A reaction that transfers energy to the surroundings, causing the temperature to increase." },
+                { q: "What factors affect the rate of a chemical reaction?", a: "Temperature, concentration, surface area, pressure, and catalysts." }
+              ],
+              notes: [
+                { t: "Rate and Energy", points: ["Catalysts speed up reactions without being used up by providing an alternative pathway with lower activation energy."] }
+              ],
+              quiz: [
+                { q: "Which factor increases reaction rate by giving particles more kinetic energy?", opts: ["Lower temperature", "Higher temperature", "Decreasing surface area", "Removing catalyst"], ans: 1 }
+              ]
+            },
+            {
+              id: "c5",
+              name: "C5: Chemical Analysis",
+              cards: [
+                { q: "What is a pure substance in chemistry?", a: "A single element or compound not mixed with any other substance, with a specific melting and boiling point." },
+                { q: "What is chromatography used for?", a: "To separate mixtures of soluble substances and identify components using an Rf value." }
+              ],
+              notes: [
+                { t: "Analysis & Tests", points: ["Test for chlorine: bleaches damp litmus paper white.", "Test for carbon dioxide: turns limewater milky/cloudy."] }
+              ],
+              quiz: [
+                { q: "Which gas bleaches damp litmus paper white?", opts: ["Oxygen", "Hydrogen", "Chlorine", "Carbon dioxide"], ans: 2 }
+              ]
+            },
+            {
+              id: "c6",
+              name: "C6: Global Challenges",
+              cards: [
+                { q: "What is potable water?", a: "Water that is safe to drink (low levels of dissolved salts and microbes)." },
+                { q: "What is Life Cycle Assessment (LCA)?", a: "An assessment of the environmental impact of a product from raw material extraction to disposal." }
+              ],
+              notes: [
+                { t: "Sustainability", points: ["Potable water is produced via filtration and sterilization (using chlorine, ozone, or UV).", "Recycling saves raw materials and energy."] }
+              ],
+              quiz: [
+                { q: "Potable water is defined as water that is:", opts: ["Pure H2O with no dissolved minerals", "Safe to drink", "Distilled from sea water", "Boiled twice"], ans: 1 }
               ]
             }
           ]
@@ -177,6 +300,7 @@
           title: "OCR GCSE 21st Century Physics (P1-P6)",
           units: [
             {
+              id: "p1",
               name: "P1: Radiation and Waves",
               cards: [
                 { q: "What is the electromagnetic spectrum in order of increasing frequency?", a: "Radio, Microwave, Infrared, Visible light, Ultraviolet, X-rays, Gamma rays." },
@@ -190,16 +314,73 @@
               ]
             },
             {
+              id: "p2",
               name: "P2: Sustainable Energy",
               cards: [
                 { q: "What equation is used to calculate electrical power?", a: "Power (P) = Current (I) × Potential Difference (V)" },
                 { q: "What is the efficiency formula?", a: "Efficiency = (Useful energy output / Total energy input) × 100%" }
               ],
               notes: [
-                { t: "Energy Resources", points: ["Renewable: solar, wind, hydro, geothermal (won't run out).", "Non-renewable: fossil fuels, nuclear (will run out)."] }
+                { t: "Energy Resources", points: ["Renewable: solar, wind, hydro, geothermal.", "Non-renewable: fossil fuels, nuclear."] }
               ],
               quiz: [
                 { q: "Power is calculated using:", opts: ["P = I × V", "P = I / V", "P = V / I", "P = I + V"], ans: 0 }
+              ]
+            },
+            {
+              id: "p3",
+              name: "P3: Electric Circuits",
+              cards: [
+                { q: "What is current?", a: "The rate of flow of electrical charge, measured in amperes (A)." },
+                { q: "What is Ohm's Law formula?", a: "Potential Difference (V) = Current (I) × Resistance (R)" }
+              ],
+              notes: [
+                { t: "Circuits", points: ["In series circuits, current is the same everywhere and voltage is shared.", "In parallel circuits, voltage is the same across branches and current is shared."] }
+              ],
+              quiz: [
+                { q: "What formula links Voltage, Current, and Resistance?", opts: ["V = I × R", "I = V × R", "R = V + I", "V = I / R"], ans: 0 }
+              ]
+            },
+            {
+              id: "p4",
+              name: "P4: Explaining Motion",
+              cards: [
+                { q: "What is the difference between speed and velocity?", a: "Speed is scalar (magnitude only); velocity is vector (magnitude and direction)." },
+                { q: "What is Newton's Second Law?", a: "Force = Mass × Acceleration (F = m × a)" }
+              ],
+              notes: [
+                { t: "Forces & Motion", points: ["Distance-time graphs: gradient equals speed.", "Velocity-time graphs: gradient equals acceleration, area under graph equals distance travelled."] }
+              ],
+              quiz: [
+                { q: "What does the gradient of a distance-time graph represent?", opts: ["Acceleration", "Speed", "Force", "Energy"], ans: 1 }
+              ]
+            },
+            {
+              id: "p5",
+              name: "P5: Radioactive Materials",
+              cards: [
+                { q: "What are the three main types of nuclear radiation?", a: "Alpha (α), Beta (β), and Gamma (γ)." },
+                { q: "What is half-life?", a: "The time taken for the radioactivity of a specified isotope to fall to half its original value." }
+              ],
+              notes: [
+                { t: "Radioactivity", points: ["Alpha is most ionizing but least penetrating (stopped by paper).", "Gamma is least ionizing but most penetrating (stopped by thick lead or concrete)."] }
+              ],
+              quiz: [
+                { q: "Which type of radiation is stopped by a sheet of paper?", opts: ["Alpha", "Beta", "Gamma", "X-rays"], ans: 0 }
+              ]
+            },
+            {
+              id: "p6",
+              name: "P6: Matter - Explaining Properties",
+              cards: [
+                { q: "What is density?", a: "Mass per unit volume, calculated as Density = Mass / Volume (ρ = m/V)." },
+                { q: "What is specific latent heat?", a: "The energy needed to change the state of 1kg of a substance without changing its temperature." }
+              ],
+              notes: [
+                { t: "States of Matter", points: ["Solid: fixed shape and volume. Liquid: takes shape of container. Gas: fills container.", "Changes of state are physical changes, not chemical."] }
+              ],
+              quiz: [
+                { q: "What is the formula for density?", opts: ["Density = Mass × Volume", "Density = Mass / Volume", "Density = Volume / Mass", "Density = Force / Area"], ans: 1 }
               ]
             }
           ]
@@ -229,6 +410,17 @@
 
       window.setSubj = function (s) {
         currentSubj = s;
+        currentUnit = 'all';
+        qIdx = 0;
+        quizIdx = 0;
+        quizSelected = null;
+        quizScore = 0;
+        flipped = false;
+        render();
+      };
+
+      window.setUnit = function (u) {
+        currentUnit = u;
         qIdx = 0;
         quizIdx = 0;
         quizSelected = null;
@@ -243,9 +435,15 @@
         render();
       };
 
+      function getFilteredUnits() {
+        var units = DATA[currentSubj].units;
+        if (currentUnit === 'all') return units;
+        return units.filter(function (u) { return u.id === currentUnit; });
+      }
+
       function getCards() {
         var list = [];
-        DATA[currentSubj].units.forEach(function (u) {
+        getFilteredUnits().forEach(function (u) {
           u.cards.forEach(function (c) {
             list.push({ topic: u.name, q: c.q, a: c.a });
           });
@@ -255,7 +453,7 @@
 
       function getQuiz() {
         var list = [];
-        DATA[currentSubj].units.forEach(function (u) {
+        getFilteredUnits().forEach(function (u) {
           u.quiz.forEach(function (q) {
             list.push({ topic: u.name, q: q.q, opts: q.opts, ans: q.ans });
           });
@@ -263,11 +461,24 @@
         return list;
       }
 
+      function renderUnitSelector() {
+        var html = '<div class="filter-bar">';
+        html += '<label style="font-size:0.85rem; color:var(--muted); width:100%;">Filter by Unit:';
+        html += '<select onchange="setUnit(this.value)">';
+        html += '<option value="all" ' + (currentUnit === 'all' ? 'selected' : '') + '>All Units</option>';
+        DATA[currentSubj].units.forEach(function (u) {
+          html += '<option value="' + u.id + '" ' + (currentUnit === u.id ? 'selected' : '') + '>' + u.name + '</option>';
+        });
+        html += '</select></label></div>';
+        return html;
+      }
+
       function renderStudy() {
         var cards = getCards();
-        if (cards.length === 0) return '<div class="panel">No cards available.</div>';
+        var html = renderUnitSelector();
+        if (cards.length === 0) return html + '<div class="panel">No cards available for this unit.</div>';
         var c = cards[qIdx % cards.length];
-        var html = '<div class="card" onclick="flipCard()">';
+        html += '<div class="card" onclick="flipCard()">';
         html += '<div class="topic"><span>' + c.topic + '</span><span>' + (qIdx + 1) + '/' + cards.length + '</span></div>';
         html += '<div class="q">' + c.q + '</div>';
         if (flipped) {
@@ -296,9 +507,10 @@
       };
 
       function renderNotes() {
-        var html = '<div class="panel">';
+        var html = renderUnitSelector();
+        html += '<div class="panel">';
         html += '<h2>' + DATA[currentSubj].title + '</h2>';
-        DATA[currentSubj].units.forEach(function (u) {
+        getFilteredUnits().forEach(function (u) {
           html += '<div class="unit-h">' + u.name + '</div>';
           u.notes.forEach(function (n) {
             html += '<div class="note-item"><b>' + n.t + '</b><ul>';
@@ -314,8 +526,11 @@
 
       function renderQuiz() {
         var quiz = getQuiz();
+        var html = renderUnitSelector();
+        if (quiz.length === 0) return html + '<div class="panel">No quiz questions available for this unit.</div>';
+
         if (quizIdx >= quiz.length) {
-          var html = '<div class="panel" style="text-align:center; padding:30px;">';
+          html += '<div class="panel" style="text-align:center; padding:30px;">';
           html += '<h2>Quiz Complete!</h2>';
           html += '<p>Score: <b>' + quizScore + ' / ' + quiz.length + '</b></p>';
           html += '<button class="btn primary" onclick="resetQuiz()">Try Again</button>';
@@ -324,7 +539,7 @@
         }
 
         var q = quiz[quizIdx];
-        var html = '<div class="panel">';
+        html += '<div class="panel">';
         html += '<div class="topic"><span>' + q.topic + '</span><span>Question ' + (quizIdx + 1) + '/' + quiz.length + '</span></div>';
         html += '<div class="q">' + q.q + '</div>';
         html += '<div class="opts">';
